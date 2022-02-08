@@ -1,3 +1,5 @@
+Minimal reproduction of clang-6 handling of inline namespaces from https://github.com/ignitionrobotics/ign-utils/issues/36
+
 Clang 6
 
 ```
@@ -34,6 +36,10 @@ clang: error: linker command failed with exit code 1 (use -v to see invocation)
 make[2]: *** [CMakeFiles/inline-namespace-repro.dir/build.make:85: inline-namespace-repro] Error 1
 make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/inline-namespace-repro.dir/all] Error 2
 make: *** [Makefile:84: all] Error 2
+
+$ nm -a ./build_clang6/libreproduction.so | c++filt | grep foo::bar
+0000000000001100 T foo::bar::baz()
+
 ```
 
 Clang 7
@@ -67,4 +73,7 @@ Scanning dependencies of target inline-namespace-repro
 [ 75%] Building CXX object CMakeFiles/inline-namespace-repro.dir/main.cc.o
 [100%] Linking CXX executable inline-namespace-repro
 [100%] Built target inline-namespace-repro
+
+$ nm -a ./build_clang7/libreproduction.so | c++filt | grep foo::bar
+0000000000001100 T foo::bar::v1::baz()
 ```
